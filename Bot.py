@@ -8,6 +8,6 @@ from discord.ext import commands
 import sqlite3
 from Includes import test
 
-test.say("Hello World +")
+test.say("Test Say Hello")
 
 
