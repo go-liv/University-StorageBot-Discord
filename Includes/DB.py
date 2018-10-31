@@ -5,7 +5,7 @@ db = sqlite3.connect('Includes/BotDB.db')
 c = db.cursor()
 
 c.execute('''
-  CREATE TABLE shops(id INTEGER PRIMARY KEY, name TEXT, address TEXT, link TEXT)
+  CREATE TABLE shops(id INTEGER PRIMARY KEY, username TEXT, passwrod TEXT, discord_id TEXT, login INTEGER)
 
 ''')
 
