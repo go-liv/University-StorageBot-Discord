@@ -1,13 +1,10 @@
 import discord
 import asyncio
-import requests
-import http.client
-import json
-import urllib.request
 from discord.ext import commands
 import sqlite3
-from Includes import test
+import Includes.login as usm
 
-test.say("Hello World +")
+usm.login("youasdnesrm#6384")
+
 
 
