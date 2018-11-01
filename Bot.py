@@ -1,10 +1,6 @@
-import discord
-import asyncio
-from discord.ext import commands
-import sqlite3
-import Includes.login as usm
+from Includes.include import *
 
-usm.login("younesrm#6384")
+usm.login("younesrm#638")
 
 
 
