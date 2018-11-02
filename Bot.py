@@ -2,7 +2,8 @@ import discord
 import asyncio
 from discord.ext import commands
 import sqlite3
-import db as database
+
+
 
 
 #Younes RM Code Section
