@@ -4,7 +4,9 @@ from discord.ext import commands
 import sqlite3
 
 
-with sqlite3.connect("BotDB.db") as db:  
+#Younes RM Code Section
+
+with sqlite3.connect("BotDB.db") as db: 
     c = db.cursor()
 client = discord.Client()
 
@@ -14,13 +16,13 @@ client = discord.Client()
 async def on_message(message):
   
     if message.author == client.user:
-      return
+        return
       
 
     if message.content.startswith('!register'):
-      ma = message.author
-      await usm.kk(ma)
-      await sendmsg(ma ,dm)
+        ma = message.author
+        await usm.kk(ma)
+        await sendmsg(ma ,dm)
      
 
 
@@ -29,9 +31,13 @@ async def on_message(message):
     
 @client.event  
 async def sendmsg(ma, msg):
-  await client.send_message(ma, msg) 
-  
+    await client.send_message(ma, msg) 
     
+    
+#Younes RM Code Section End
+
+
+
 @client.event
 async def on_ready():
     print('Logged in as')
