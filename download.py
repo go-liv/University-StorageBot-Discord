@@ -5,14 +5,14 @@ import asyncio
 #
 #
 #
-#connecting to the data base and creating a cursor so we can select files
+#Connecting to the data base and creating a cursor so we can select files
 database = sqlite3.connect("The database used to store the files")
-
+#
 cursor = database.cursor()
 #
 #
 #
-#assigning the bot's command prefix
+#Assigning the bot's command prefix
 client = commands.Bot(command_prefix = "!")
 #
 #
@@ -20,7 +20,7 @@ client = commands.Bot(command_prefix = "!")
 #
 #
 #
-#this function allows the user to download a file (it is the last command getting used, before this we have the upload function and a read function)
+#This function allows the user to download a file (it is the last command getting used, before this we have the upload function and a read function)
 @client.command(pass_context=True)
 async def download(ctx):
         await client.send_message(ctx.message.author, "Can you tell me the name of the file you want to download? ")
