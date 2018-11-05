@@ -1,33 +1,40 @@
 import sqlite3
-import requests
 from discord.ext import commands
 import discord 
 import asyncio
-
-
-
-"""
-    define download(userid, file path, file):
-        knowing the userid and the file name go to table and get file path
-        with file path send message to the user with the file
-        let user know that discord has a function that allows the user to download the file to the pc.
-
-"""
-
+#
+#
+#
 #connecting to the data base and creating a cursor so we can select files
 database = sqlite3.connect("The database used to store the files")
 
 cursor = database.cursor()
-
-
-
-@client.command
-async def download_file(userid, filepath, filename):
-    cursor.execute(SELECT filepath FROM database WHERE filename = "The name of the file the user is looking for" AND userid = "The user id of the user")
+#
+#
+#
+#assigning the bot's command prefix
+client = commands.Bot(command_prefix = "!")
+#
+#
+#
+#
+#
+#
+#this function allows the user to download a file (it is the last command getting used, before this we have the upload function and a read function)
+@client.command(pass_context=True)
+async def download(ctx):
+        await client.send_message(ctx.message.author, "Can you tell me the name of the file you want to download? ")
     
-    file = requests.get(filepath)
+        file_name = await client.wait_for_message(author = ctx.message.author)
     
-    await client.send_file(message.author, file)
-
+        cursor.execute(SELECT filepath FROM database WHERE filename = file_name AND userid = "The user id of the user")
+    
+        await client.send_file(ctx.message.author, file)
+        await client.send_message(ctx.message.author, "You can always download the file by right-clicking the file and using the discord option.")
+#
+#
+#
+#
+#
 
 
