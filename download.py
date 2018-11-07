@@ -14,7 +14,7 @@ async def download(ma):
                 await sendmsg(ma, msg)
 
         else:
-            msg = 'You are not logged in, please log in before trying to download a file'
+            msg = 'You are not logged in, please log in with !login before trying to download a file'
             await sendmsg(ma, msg)
 #
 #
