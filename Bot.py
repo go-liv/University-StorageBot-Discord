@@ -4,17 +4,19 @@ from discord.ext import commands
 import sqlite3
 
 
-<<<<<<< HEAD
+#<<<<<<< HEAD
 
 #Younes RM Code Section
-=======
->>>>>>> 59ca35a3f1513732bb68218f800acd04baf2e709
+#=======
+#>>>>>>> 59ca35a3f1513732bb68218f800acd04baf2e709
 
 
 #Younes RM Code Section
 with sqlite3.connect("BotDB.db") as db: 
     c = db.cursor()
 client = discord.Client()
+
+c.execute("CREATE TABLE `files` (`id`	INTEGER, `file_path`	TEXT, `file_code`	INTEGER, `file_name`	TEXT, PRIMARY KEY(`id`))")
 
 
 
@@ -45,7 +47,12 @@ async def on_message(message):
     if message.content.startswith('!dm'):
         await delete(ma)
 
-
+    #Guilherme's Code
+    if message.content.startswith('!download'):
+        await download(ma)
+    
+    
+    #End of Guilherme's code
 
     
 
@@ -161,12 +168,13 @@ async def sendmsg(ma, msg):
     await client.send_message(ma, msg) 
     
 
-async def getmsg(ma,msg,d):
+async def getmsg(ma,msg):
     await client.send_message(ma, msg)
     answer = await client.wait_for_message(timeout=10.0, author=ma)
     if answer is None:
         return False
     else:
+
         a = answer.content
         return a
     
