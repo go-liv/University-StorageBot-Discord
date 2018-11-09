@@ -16,8 +16,6 @@ with sqlite3.connect("BotDB.db") as db:
     c = db.cursor()
 client = discord.Client()
 
-c.execute("CREATE TABLE `files` (`id`	INTEGER, `file_path`	TEXT, `file_code`	INTEGER, `file_name`	TEXT, PRIMARY KEY(`id`))")
-
 
 
 @client.event
