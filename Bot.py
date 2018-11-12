@@ -1,7 +1,13 @@
+import string 
 import discord
 import asyncio
 from discord.ext import commands
 import sqlite3
+import os
+import glob
+import imageio
+import random
+
 
 
 
@@ -39,8 +45,8 @@ async def on_message(message):
         
     if message.content.startswith('!dm'):
         await delete(ma)
-
-
+    if message.content.startswith('!slideshow'):
+        await slideshow(ma)
 
     
 
@@ -57,7 +63,9 @@ async def allusers(ma):
         msg = ("name: " + row[1] + " / Discord ID: " + row[3])
         await sendmsg(ma, msg)
     
-
+''' this function is used to let user to login to their account using validation of 
+making sure they do have a current account with us and they are not currenly logged in 
+'''
 async def login(ma):
     if await checkdb('discord_id', ma) == False:
         msg = 'You do not have an account with us yet'
@@ -99,6 +107,10 @@ async def logged(ma):
 
 
 async def rf(ma):
+    if await checkdb('discord_id', ma) == True:
+      msg = 'You already have an account with us'
+      await sendmsg(ma, msg)
+      return
     msg = 'Hello, to register please Chose a Username.'
     username = await getmsg(ma, msg, False)
     if username is False:
@@ -126,7 +138,61 @@ async def rf(ma):
                     
 
                 
-
+async def slideshow(ma):
+  itemList = await getlist(ma)
+  await sendmsg(ma,itemList)
+  list = []
+  images = await getMultyMessage(ma,list)
+  if images == False:
+    msg = 'invalid input, please call the bot again'
+    await sendmsg(ma,msg)
+    return
+  #img_dir = "users/" + str(ma)
+  #img_list = glob.glob(f"{img_dir}/*.jpg")
+  flist = []
+  for i in list:
+    i = getItem(ma, i)
+    images.append(imageio.imread(i))
+  name = await nameGenerator(ma, ".gif")
+  file = img_dir + '/' + name
+  imageio.mimsave(file, images, duration=3)
+  await client.send_file(ma, file)
+  
+  
+async def getMultyMessage(ma,list):
+  msg = "please select your first item using item code"
+  item = await getmsg(ma, msg)
+  if item == false:
+    await timesup(ma)
+  Try:
+    item = int(item)
+    if await checkitem(ma,'item', item) == True:
+      list.append(item)
+      await getMultyMessage(ma, list)
+    else:
+      msg= 'item does not exitst please check the item code. to exit ingnore this msg'
+      await sendmsg(ma,msg)
+      getMultyMessage(ma,list)
+  expect:
+    if item.lower() == 'done':
+      return list
+    else:
+      return False
+      
+  
+async def nameGenerator(ma, fex):
+  N = random.randint(1,10)
+  name = ''.join(random.choices(string.ascii_uppercase + string.digits, k=N))
+  name = str(name) + str(fex)
+  d = 'users/' + str(ma) + name
+  if os.path.exists(d):
+    nameGenerator(ma, fex)
+  else:
+    return str(name)
+  
+  
+  
+  
 async def checkdb(rn, rv):
     rn = str(rn)
     rv = str(rv)
@@ -144,6 +210,9 @@ async def register(username,pw,ma):
     data = ("INSERT INTO users(username, passwrod, discord_id, login) VALUES(?, ?, ?, 0)")
     c.execute(data, [(username),(pw),(ma)])  
     db.commit()
+    directory = "users/" + ma
+    if not os.path.exists(directory):
+      os.makedirs(directory)
 
 async def delete(ma):
     ma = str(ma)
@@ -170,6 +239,7 @@ async def timesup(ma):
     await sendmsg(ma, msg) 
     
 #Younes RM Code Section End
+
 
 
 
