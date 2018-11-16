@@ -1,3 +1,4 @@
+
 import string 
 import discord
 import asyncio
@@ -164,7 +165,7 @@ async def getMultyMessage(ma,list):
   item = await getmsg(ma, msg)
   if item == false:
     await timesup(ma)
-  Try:
+  try:
     item = int(item)
     if await checkitem(ma,'item', item) == True:
       list.append(item)
@@ -172,8 +173,8 @@ async def getMultyMessage(ma,list):
     else:
       msg= 'item does not exitst please check the item code. to exit ingnore this msg'
       await sendmsg(ma,msg)
-      getMultyMessage(ma,list)
-  expect:
+      await getMultyMessage(ma,list)
+  except:
     if item.lower() == 'done':
       return list
     else:
