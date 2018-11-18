@@ -172,7 +172,7 @@ async def sendmsg(ma, msg):
     await client.send_message(ma, msg) 
     
 
-async def getmsg(ma,msg):
+async def getmsg(ma,msg, l = False):
     await client.send_message(ma, msg)
     answer = await client.wait_for_message(timeout=10.0, author=ma)
     if answer is None:
@@ -226,7 +226,7 @@ async def download(ma):                                                         
 #                                                                                                                                                   #                                                
 ##########################--------This fucntion allows the user to read the files he has in his folder--------#######################################                                                                            
 async def myfiles(ma):                                                                                                                              #
-        if logged(ma) == True:                                                                                                                      #
+        if await logged(ma) == True:                                                                                                                      #
 ###---------Showing users their files---------####################################################################################################### 
             data = c.execute("SELECT file_name, file_code FROM files WHERE user_id = userid")                                                       #
             results = c.fetchall()                                                                                                                  #
