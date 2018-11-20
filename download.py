@@ -1,27 +1,29 @@
 #This function allows the user to download a file (it is the last command getting used, before this we have the upload function and a read function)
 async def download(ma):
         
-        if logged(ma) == True:
+        if await logged(ma) == True:
             #Getting user's id
-            selection = ("SELECT id FROM users WHERE discord_id = ?")
-            userid = c.execute(selection,[(str(ma))])
-            
             msg = 'Can you tell me the code of the file you want to download?'
             code = await getmsg(ma, msg)
             
             if await checkdb('file_code', code) == True:
-                file = c.execute("SELECT file_path FROM files WHERE file_code = code AND user_id = userid")
-                file = open(file)
+                execution = "SELECT file_path FROM files WHERE file_code = code AND discord_id = ?"
+                filepath = c.execute(execution, [(str(ma))])
+                file = open(filepath)
         
                 await client.send_file(ma, file)
                 msg = 'You can always download the file by right-clicking the file and using the discord option.' 
                 await sendmsg(ma, msg)
                 
+                msg = 'Do you want to download another file? (y/n)'
+                response = await getmsg(ma, msg)
                 
+                if response == 'Y' or response == 'y':
+                    await download(ma)
                 
-                
-                
-                #####ask user if wants to download another file and make code for that etc...
+                else:
+                    continue
+
             
             else:
                 msg = "The file you asked for doesn't seem to exist, recheck the file code and try again."
@@ -40,7 +42,7 @@ async def download(ma):
 async def myfiles(ma):
         if logged(ma) == True:
             #Showing user their files
-            data = c.execute("SELECT file_name, file_code FROM files WHERE user_id = ?")
+            data = c.execute("SELECT file_name, file_code FROM users WHERE discord_id = ?")
             results = c.fetchall()
             
             for i in results:
