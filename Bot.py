@@ -75,7 +75,7 @@ async def allusers(ma):
     
 
 async def login(ma):
-    if await checkdb('discord_id', ma) == False:
+    if await checkdbusers('discord_id', ma) == False:
         msg = 'You do not have an account with us yet'
         await sendmsg(ma, msg)
         return
@@ -89,7 +89,7 @@ async def login(ma):
         await sendmsg(ma, 'You have been login')
         
 async def logout(ma):
-    if await checkdb('discord_id', ma) == False:
+    if await checkdbusers('discord_id', ma) == False:
         msg = 'You do not have an account with us yet'
         await sendmsg(ma, msg)
         return
@@ -120,7 +120,7 @@ async def rf(ma):
     if username is False:
         await timesup(ma)
     else:
-        if await checkdb('username', username) == True:
+        if await checkdbusers('username', username) == True:
             msg = 'This username already exists! call the bot again'
             await sendmsg(ma, msg)
             return
@@ -143,10 +143,21 @@ async def rf(ma):
 
                 
 
-async def checkdb(rn, rv):
+async def checkdbusers(rn, rv):
     rn = str(rn)
     rv = str(rv)
     data = ("SELECT * from users WHERE " + rn + " = ?")
+    c.execute(data, [(rv)])
+    results = c.fetchall()
+    if results:
+        return True
+    else:
+        return False
+    
+async def checkdbfiles(rn, rv):
+    rn = str(rn)
+    rv = str(rv)
+    data = ("SELECT * from files WHERE " + rn + " = ?")
     c.execute(data, [(rv)])
     results = c.fetchall()
     if results:
@@ -195,22 +206,48 @@ async def timesup(ma):
 #                                                                                                                                                   #
 #                                                                                                                                                   #
 async def download(ma):                                                                                                                             #                                                                                                                                                   #
-        if logged(ma) == True:                                                                                                                      #
-###---------Getting user's id---------###############################################################################################################                                                                                                                      #
-            selection = ("SELECT id FROM users WHERE discord_id = ?")                                                                               #
-            userid = c.execute(selection,[(str(ma))])                                                                                               #
-                                                                                                                                                    #                              
+        if await logged(ma) == True:                                                                                                                 
+###---------Getting user's id---------###############################################################################################################                                                                                                                      #                                                                                              #                                                                                                                                        #                              
             msg = 'Can you tell me the code of the file you want to download?'                                                                      #
-            code = await getmsg(ma, msg)                                                                                                            #
+            code = await getmsg(ma, msg) 
+        
+            if code == False:
+                await timesup(ma)
+                return
                                                                                                                                                     #            
-            if await checkdb('file_code', code) == True:                                                                                            #
-                file = c.execute("SELECT file_path FROM files WHERE file_code = code AND user_id = userid")                                         #
-                file = open(file)                                                                                                                   #
-                                                                                                                                                    #
-                await client.send_file(ma, file)                                                                                                    #
+            if await checkdbfiles('file_code', code) == True:                                                                                            #
+                execution = "SELECT file_path FROM files WHERE file_code = ? AND discord_id = ?"
+                filepath1 = c.execute(execution, [str(code), str(ma)])
+                filepath2 = c.fetchone()[0]
+                #filepath3 = str(filepath2).strip("'[(]),")                                                                                                       #                                                                                                                               #
+         
+                await client.send_file(ma, filepath2)                                                                                                    #
                 msg = 'You can always download the file by right-clicking the file and using the discord option.'                                   #
-                await sendmsg(ma, msg)                                                                                                              #
-                                                                                                                                                    #
+                await sendmsg(ma, msg) 
+                
+                
+                msg = 'Do you want to download another file? (y/n)'
+                response = await getmsg(ma, msg)
+                if response == False:
+                    await timesup(ma)
+                    return
+                
+                if response == 'Y' or response == 'y':
+                    await download(ma)
+                
+                elif response.content == 'N' or response.content == 'n':
+                    msg = 'I will see you next time!'
+                    
+                    await sendmsg(ma, msg)
+                    return
+                
+                else:
+                    msg = 'That is not a valid answer please try again with !download.'
+                    
+                    await sendmsg(ma, msg)
+                    return
+                    
+                    
             else:                                                                                                                                   #
                 msg = "The file you asked for doesn't seem to exist, recheck the file code and try again."                                          #
                 await sendmsg(ma, msg)                                                                                                              #
@@ -218,7 +255,8 @@ async def download(ma):                                                         
                                                                                                                                                     #
         else:                                                                                                                                       #
             msg = 'You are not logged in, please log in with !login before trying to download a file'                                               #
-            await sendmsg(ma, msg)                                                                                                                  #
+            await sendmsg(ma, msg)  
+            return
 #                                                                                                                                                   #
 #                                                                                                                                                   #                                                                                                                                                              
 #                                                                                                                                                   #                        
@@ -228,11 +266,12 @@ async def download(ma):                                                         
 async def myfiles(ma):                                                                                                                              #
         if await logged(ma) == True:                                                                                                                      #
 ###---------Showing users their files---------####################################################################################################### 
-            data = c.execute("SELECT file_name, file_code FROM files WHERE user_id = userid")                                                       #
+            query = "SELECT file_name, file_code FROM files WHERE discord_id = ?"
+            data = c.execute(query, [(str(ma))])                                                       #
             results = c.fetchall()                                                                                                                  #
                                                                                                                                                     #            
             for i in results:                                                                                                                       #
-                msg = "File name: " + i[3] + "   /   File code: " + i[2]                                                                            #
+                msg = "File name: " + str(i[0]) + "   /   File code: " + str(i[1])                                                                            #
                                                                                                                                                     #             
                 await sendmsg(ma, msg)                                                                                                              #
                                                                                                                                                     #            
