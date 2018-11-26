@@ -498,8 +498,12 @@ async def myfiles(ma):                                                          
             query = "SELECT file_name, file_code FROM files WHERE user = ?"                                                                         #
             data = c.execute(query, [(str(ma))])                                                                                                    #
             results = c.fetchall()                                                                                                                  #
-                                                                                                                                                    #            
+            flistn = []                                                                                                                             #
+            flistc = []                                                                                                                             #
             for i in results:                                                                                                                       #
+                flistn.append(i[0])                                                                                                                 #
+                flistc.append(i[1])
+                
                 msg = "File name: " + str(i[0]) + "   /   File code: " + str(i[1])                                                                  #
                                                                                                                                                     #             
                 await sendmsg(ma, msg)                                                                                                              #
