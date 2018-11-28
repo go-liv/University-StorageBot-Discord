@@ -1,41 +1,46 @@
-<!DOCTYPE html>
-<html lang="en-us">
+<!doctype html>
+<html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Discord StorageBot by deoliveg</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
   <body>
-    <section class="page-header">
-      <h1 class="project-name">Discord StorageBot</h1>
-      <h2 class="project-tagline"></h2>
-      <a href="https://github.coventry.ac.uk/deoliveg/StorageBot-Discord" class="btn">View on GitHub</a>
-    </section>
+    <div class="wrapper">
+      <header>
+        <h1>Discord StorageBot</h1>
+        <p></p>
 
-    <section class="main-content">
-      <p>An introduction to a new project isn't always easy, this was another one of those normal project cases where we start with one idea and the end is completely different than what we were expecting.</p>
+        <p class="view"><a href="https://github.coventry.ac.uk/deoliveg/StorageBot-Discord">View the Project on GitHub <small>deoliveg/StorageBot-Discord</small></a></p>
+
+
+      </header>
+      <section>
+        <p>An introduction to a new project isn't always easy, this was another one of those normal project cases where we start with one idea and the end is completely different than what we were expecting.</p>
 <p>The first idea was to make a Coventry Friendly Bot, it would give you helpful information about living in Coventry, like restaurants or bus times, but after doing that for a while we started to feel like the project was not going anywhere, people were making code that others needed and the communication was poor between us. That was when the Storage Bot idea gained form.</p>
 <p>In our experience as Discord users (at least most of us) there was nothing related to file storage and sharing that could be used in discord, we could send files to friends or groups but we were not able to save an image or a simple pdf file. So our idea was to build a "safe haven" where we could let our light files to rest.</p>
-<p>My part of the build was the <strong>download</strong>, the project consists of a file that is uploaded, saved in <a href="https://codio.co.uk/">Codio</a>, registered in our database and then be accessed again by the user via download. This means that there is an inbuilt register system with password encryption and databases managing all the users and files information. Since I only had to focus on the download, my job was to search the database containing the files name and path so I could send the user the file they asked for via Discord messaging. For all this to happen I needed to understand how the Discord's API for python worked, how to create and manipulate a table in a database with python (in this case we used the sqlite3 library for python), and how the basis of a file transfer system work.<br>
+<p>My part of the build was the <strong>download</strong> but I have also made a function to allow the user to check the files stored in the bot, the project consists of a file that is uploaded, saved in <a href="https://codio.co.uk/">Codio</a>, registered in our database and then be accessed again by the user via download. This means that there is an inbuilt register system with password encryption and databases managing all the users and files information. Since I only had to focus on the download, my job was to search the database containing the files name and path so I could send the user the file they asked for via Discord messaging. For all this to happen I needed to understand how the Discord's API for python worked, how to create and manipulate a table in a database with python (in this case we used the sqlite3 library for python), and how the basis of a file transfer system work.<br>
 The trickiest part was definitely the database, to someone that had just scrapped the shell of python and programming in general, having to learn something completely new is always a hard time. But I managed to learn something new and something that is useful, I created the table "files" where the name, code, and path of the file are stored as well as the Discord ID of the user from whom the files are. This part of the file code was just a way to make file selection easier for the user and me as a developer, if I asked for the full name of the file every time people would probably get the name wrong most of the times, so with a simple numeric code that job is way easier.<br>
 Having to work with Discord's API was not easy too, the documentation for it is vast but at the same time it is not that explicit so in order to understand it truly you have to dig a bit deeper and sometimes search the web for other developers who encountered the same issues as you did.</p>
-<p>Laying all this to the side, how does my function actually work?<br>
-First of all the bot must be called, you can do that in two ways, with the command !myfiles or the command !download.<br>
-The command !myfiles will show you the files you have stored in the bot with the respective assigned code, so that function will start by searching the database for your Discord ID and registering the columns file name and file code that have the column Discord ID equal to your personal ID from the platform. With this done the next step is to prepare the data to be sent to you, so the data is stored in a list and this list will consist of tuples and each tuple contains a file name and an assigned numeric code. To finish this function the bot sends the user a private message with the name of the file and the file code.<br>
-<img alt=""></p>
-
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.coventry.ac.uk/deoliveg/StorageBot-Discord">Discord StorageBot</a> is maintained by <a href="https://github.coventry.ac.uk/deoliveg">deoliveg</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+<p>Laying all this to the side, how does my functions actually work?<br>
+First of all the bot must be called, you can do that in two ways, with the command !myfiles or the command !download.</p>
+<p>The command !myfiles will show the user the files he/she has stored in the bot with the respective assigned code, so that function will start by searching the database for the users Discord ID and registering the columns file name and file code that have the column Discord ID equal to the users personal ID from the platform. With this done the next step is to prepare the data to be sent to the user, so the data is stored in a list and this list will consist of tuples and each tuple contains a file name and an assigned numeric code. To finish this function the bot sends the user a private message with the name of the file and the file code.</p>
+<p>After knowing the code of the file you want to download the next thing the user can do is call the !download command.<br>
+It starts by asking what is the code of the file the user wants to download via Discord message. With an answer given the bot has now the job to search the data base for the file path, so it uses the code the user provided and selects the row in the database where the Discord ID is equal to the users and the file code is the same as the one the user provides. Now the bot as the users file path and it just have to send it to the user via Discord message again. He also asks if the user wants to do another download which will basically call the function all over again.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.coventry.ac.uk/deoliveg">deoliveg</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
-
-    </section>
-
-  
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
   </body>
 </html>
