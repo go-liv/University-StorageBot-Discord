@@ -518,4 +518,4 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
-client.run('NTA1MTYyODI0MjEzODU2MjU2.DrRxzA.AejgQIuwCIx6WGIZBFv0H-fGHrA')
+client.run('token of the bot is inserted here')
