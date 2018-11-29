@@ -2,8 +2,9 @@
 ##################################################--------Guilherme's Code--------###################################################################
 #--------------------------------------------------------Download Function--------------------------------------------------------------------------#
 #This function allows the user to download a file (it is the last command getting used, before this we have the upload function and a read function)#
-#You can call the function by simply passing the author of the message, in this case it is the variable ma(message.author)                          #                                                                                                                         #
-#The functionality of the function is to ask the user for a code, which is assigned to his file when uploaded, and then search for this code in the #                                                                                                                                                   #
+#You can call the function by simply passing the author of the message, in this case it is the variable ma(message.author = Discord ID)             #                         #                                                                                                                         #
+#The functionality of the function is to ask the user for a code, which is assigned to his file when uploaded, and then search for this code        #
+#(file_code column in the                                                                                                                           #                                                                                                                                                   #
 #database. When the code is found, the function grabs the file path in the same row as the code and sends the file from that file path to the user  #
 #as a message                                                                                                                                       #
 #####################################################################################################################################################
@@ -53,7 +54,7 @@ async def download(ma):                                                         
             else:                                                                                                                                   #
                 msg = "The file you asked for doesn't seem to exist, recheck the file code and try again."                                          #
                 await sendmsg(ma, msg)                                                                                                              #
-                await download(ma)                                                                                                                  #
+                return                                                                                                                              #
                                                                                                                                                     #
         else:                                                                                                                                       #
             msg = 'You are not logged in, please log in with !login before trying to download a file'                                               #
@@ -66,9 +67,9 @@ async def download(ma):                                                         
 '''                                                                                                                                                                                                 
 #----------------------------------------------------------My Files Function------------------------------------------------------------------------#                                                                            
 #This function was made in order to show the users the files they have stored in our storage bot                                                    #
-#It can be called like the download function just by passing the user's ma                                                                          #
-#In quick terms, the function searches the database for the files and shows the user the file name and the respective assigned code, all this is    #
-#made by searching the database for the row where the user's ma is.                                                                                 #
+#It can be called like the download function just by passing the user's ma (Discord ID)                                                             #
+#In quick terms, the function searches the database for the column file_name and file_code and shows the user the file_name and the respective      #
+#assigned code, all this is made by searching the database for the row where the user's ma (Discord ID) is.                                         #                  #                           #
 #####################################################################################################################################################
 '''
 async def myfiles(ma):                                                                                                                              #
@@ -76,10 +77,8 @@ async def myfiles(ma):                                                          
 ###---------Showing users their files---------####################################################################################################### 
             query = "SELECT file_name, file_code FROM files WHERE user = ?"                                                                         #
             data = c.execute(query, [(str(ma))])                                                                                                    #
-            results = c.fetchall()                                                                                                                  #
-                                                                                                                                                    #            
-            for i in results:      
-               
+            results = c.fetchall()                                                                                                                  #                                                                                                                          #
+            for i in results:                                                                                                                       #
                 msg = "File name: " + str(i[0]) + "   /   File code: " + str(i[1])                                                                  #
                                                                                                                                                     #             
                 await sendmsg(ma, msg)                                                                                                              #
@@ -95,7 +94,7 @@ async def myfiles(ma):                                                          
 #                                                                                                                                                   #
 #                                                                                                                                                   #
 #                                                                                                                                                   #
-#
-'''                                                                                                                                                   #
+#                                                                                                                                                   #
+'''                                                                                                                                                 #
 ###############################################--------End of Guilherme's Code--------###############################################################                                                                                                                                                  #
 '''
