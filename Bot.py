@@ -523,6 +523,85 @@ async def myfiles(ma):
 '''
 
 
+
+
+#Angelo Code Section
+
+"""uploadanotherfile was adaptaded from Guilherme's code first into this feature and then a function so it could
+     be called and it wouldn't be necessary to write it twice, instead it can just be called twice. The function
+     as its name suggests it's used to ask the user if they want to upload another file."""
+async def uploadanotherfile(ma, msg):
+    msg = 'Do you want to upload another file? (y/n)'
+    response = await getmsg(ma, msg)
+    if response == False:
+        await timesup(ma) """If the user doesn't within a certain time, the function does nothing"""
+        return
+                
+        if response == 'Y' or response == 'y':
+            await upload(ma) """Upload function is called and the user can upload another file"""
+                
+        elif response == 'N' or response == 'n':
+            msg = 'To use this command again later use !upload.'
+            await sendmsg(ma, msg)
+            return
+                
+        else: """If the user responds with something other than y, Y, n, N a message is sent to user to type the upload command to try again"""
+            msg = 'That is not a valid answer please try again with !upload.'
+            await sendmsg(ma, msg)
+            return
+    
+
+"""The function upload allows the user to store light files in their own folder. First it checks if the user is
+    logged in. If they are not, a message will be sent to the user to login. If the user is logged in, then, they
+    will receive a message to send the file to store. When the file is sent, the getmsg function gets the file
+    name, size, and url to download. If the file is smaller is than 8MB, then the file is download into the user's
+    folder, and it's given a code that will be used to download it and file path. The file name, code, and path
+    are added in the files table in the database, with its owner's id. If the file is bigger than 8MB, the user
+    won't be able to store it. After the file is uploaded, the uploadanotherfile function is called, giving the
+    user the option to upload another file."""
+async def upload(ma):
+    if await logged(ma) == True:
+        msg = "Send the file you want to store."
+        await sendmsg(ma, msg)       
+        filedetails = await getmsg(ma, msg)
+        filesize = filedetails[0]['size']
+        fileurl = filedetails[0]['proxy_url'] 
+        filename = filedetails[0]['filename']
+        filepath = "users/" + ma + "/"
+        
+        filesize = int(filesize)
+        if filesize <= 8000:
+            initialworkdirectory = os.getcwd()
+            os.chdir(filepath)
+        
+            gettingfile = requests.get(fileurl)
+            with open(filename, "wb") as f:    
+                f.write(file.content)          
+
+            os.chdir(initialworkdirectory)
+            
+            filepath = filepath + filename
+            filecode = int(c.execute(SELECT COUNT (file_code) FROM files))
+            filecode = str(filecode + 1)
+            c.execute(INSERT INTO files VALUES (ma, filename, filecode, filepath))
+            
+            await uploadanotherfile(ma, msg)
+            
+        else:
+            msg = "You can't upload files bigger than 8MB"
+            await sendmsg
+            await uploadanotherfile(ma, msg)
+            
+    else:
+        msg = "You must be logged in to upload files. To login use !login." 
+        await sendmsg(ma, msg)
+        return
+
+#Angelo Code Section End
+
+
+
+
 @client.event
 async def on_ready():
     print('Logged in as')
