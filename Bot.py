@@ -8,7 +8,7 @@ import os
 import glob
 import imageio
 import random
-
+import requests
 
 
 
@@ -128,7 +128,10 @@ async def on_message(message):
     #                                                                            #
     #####################----End of Guilherme's code----##########################
 
+    #Angelo Code Section
     
+    if message.content.startswith('!upload'):
+    await upload(ma)
 
 
 
